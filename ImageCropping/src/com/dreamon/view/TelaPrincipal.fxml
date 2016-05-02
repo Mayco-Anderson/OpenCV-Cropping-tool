@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dreamon.view.TelaPrincipalController">
+   <children>
+      <SplitPane dividerPositions="0.29797979797979796" layoutX="334.0" layoutY="186.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <Label fx:id="label" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="179.0" text="Label" wrapText="true" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
+                  <Button fx:id="selectFolder" layoutX="164.0" layoutY="9.0" mnemonicParsing="false" onAction="#openFile" text="folder" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="9.0" />
+                  <ListView fx:id="listView" layoutX="14.0" layoutY="60.0" prefHeight="527.0" prefWidth="241.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="60.0" />
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <BorderPane layoutX="202.0" layoutY="157.0" prefHeight="598.0" prefWidth="626.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <top>
+                        <Label fx:id="fileLabel" text="file" BorderPane.alignment="CENTER" />
+                     </top>
+                     <center>
+                        <AnchorPane fx:id="imagePane">
+                           <children>
+                              <ImageView fx:id="imageView" fitHeight="410.0" fitWidth="394.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" BorderPane.alignment="CENTER">
+                                 <BorderPane.margin>
+                                    <Insets />
+                                 </BorderPane.margin>
+                              </ImageView>
+                           </children>
+                        </AnchorPane>
+                     </center>
+                     <right>
+                        <VBox prefHeight="581.0" prefWidth="215.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <Label fx:id="coordinatesLabel" prefHeight="146.0" prefWidth="174.0" text="Label">
+                                 <VBox.margin>
+                                    <Insets left="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                           </children>
+                        </VBox>
+                     </right>
+                  </BorderPane>
+               </children></AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>
