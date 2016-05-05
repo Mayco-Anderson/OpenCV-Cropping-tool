@@ -1,6 +1,7 @@
 package com.dreamon.view;
 
 
+
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -32,7 +33,6 @@ import javafx.stage.Stage;
  */
 public class MainController implements Initializable{
 
-
 	/*
 	 * A reference to the stage. Needed to open file chooser.
 	 */
@@ -60,7 +60,6 @@ public class MainController implements Initializable{
 	AnchorPane imagePane;
 	@FXML
 	Label coordinatesLabel;
-
 
 	/*
 	 * The marked area is represented by a rectangle.
