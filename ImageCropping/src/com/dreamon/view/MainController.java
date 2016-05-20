@@ -76,6 +76,12 @@ public class MainController implements Initializable{
 	 */
 	private double iniX = 0;
 	private double iniY = 0;
+	
+	/*
+	 * The imageview is a little shifted in the vertical orientation.
+	 * The shifted value is needed to fix coordinates of the real image
+	 */
+	private double verticalShift = 0;
 
 	/**
 	 * This method is called when the user press the open folder button.
@@ -103,7 +109,7 @@ public class MainController implements Initializable{
 			fileLocation.setText(file.getAbsolutePath());
 			document.loadFile();
 		}
-		
+
 	}
 
 
@@ -111,9 +117,10 @@ public class MainController implements Initializable{
 	private void save(ActionEvent event) {
 
 		Rectangle currentRectangle = getCurrentRectangule();
+		currentRectangle = dislay2Real(currentRectangle);
 		if (currentFile != null && currentFile.exists() && currentRectangle != null){
-			System.out.println("inserting data. File name: : "+currentFile.getName() + getCurrentRectangule());
-			document.getCroppedImages().put(currentFile.getName(), getCurrentRectangule());
+			System.out.println("inserting data. File name: : "+currentFile.getName() + currentRectangle);
+			document.getCroppedImages().put(currentFile.getName(), currentRectangle);
 			document.save();
 		}
 	}
@@ -124,14 +131,16 @@ public class MainController implements Initializable{
 		currentFile = file;
 		Image image = new Image("file:" + file.getAbsolutePath());
 		imageView.setImage(image);
-		System.out.println("Changing image. Loading rectangle...");
+		
 		// Load a rectangle if exists one. Or clear the image
 		Rectangle rectangle = document.getCroppedImages().get(file.getName());
+		// Convert the coordinates of the real image to the display coordinates
+		rectangle = real2Display(rectangle);
+		
 		if (rectangle == null){
 			rectangle = getNewRectangle();
 		}
 
-		System.out.println("Rectangle recovered: "+rectangle);
 		setRectanguleCoordinates(
 				rectangle.getX(),
 				(rectangle.getX() + rectangle.getWidth()),
@@ -139,6 +148,8 @@ public class MainController implements Initializable{
 				(rectangle.getY() + rectangle.getHeight())
 				);
 	}
+
+
 
 	/*
 	 * Configures a handler for the mouse event
@@ -208,6 +219,64 @@ public class MainController implements Initializable{
 				(rectY.get() - rectinitY.get()));
 	}
 
+	private Rectangle dislay2Real(Rectangle displayRect){
+//		Rectangle realRect = new Rectangle();
+//		Image realImage = imageView.getImage();
+//		
+//		double realWidth = realImage.getWidth();
+//		double realHeight = realImage.getHeight();
+//		double displayWidth = imageView.getLayoutBounds().getWidth();
+//		double displayHeight = imageView.getLayoutBounds().getHeight();
+//
+//		realRect.setX(displayRect.getX() * realWidth / displayWidth);
+//		realRect.setY( (displayRect.getY()- verticalShift) * realHeight / displayHeight);
+//		realRect.setWidth(displayRect.getWidth() * realWidth / displayWidth);
+//		realRect.setHeight(displayRect.getHeight() * realHeight / displayHeight);
+
+		return writeCoordinates();
+	}
+
+	
+	private Rectangle real2Display (Rectangle realRect){
+		
+		Rectangle displayRect = new Rectangle();
+		Image realImage = imageView.getImage();
+		
+		double realWidth = realImage.getWidth();
+		double realHeight = realImage.getHeight();
+		double displayWidth = imageView.getLayoutBounds().getWidth();
+		double displayHeight = imageView.getLayoutBounds().getHeight();
+		verticalShift = imageView.localToParent(imageView.getBoundsInLocal()).getMinY();
+
+		System.out.println("Real Width: " + realWidth);
+		System.out.println("Real Height: " + realHeight);
+		System.out.println("Display  Width: " + displayWidth);
+		System.out.println("Display Height: " + displayHeight);
+		System.out.println("Vertical shift:  "+verticalShift);
+		
+		
+		displayRect.setX(realRect.getX() / realWidth * displayWidth + imageView.getLayoutX());
+		displayRect.setY( realRect.getY() / realHeight * displayHeight + imagePane.getLayoutY() + verticalShift
+				);
+		displayRect.setWidth(realRect.getWidth() / realWidth * displayWidth);
+		displayRect.setHeight(realRect.getHeight() / realHeight * displayHeight);
+		
+		System.out.println("Real X: " + realRect.getX());
+		System.out.println("Real Y: " + realRect.getY());
+		System.out.println("Display  X: " + displayRect.getX());
+		System.out.println("Display Y: " + displayRect.getY());
+		
+		System.out.println("Real width: " + realRect.getWidth());
+		System.out.println("Real height: " + realRect.getHeight());
+		System.out.println("Display  width: " + displayRect.getWidth());
+		System.out.println("Display height: " + displayRect.getHeight());
+
+		return displayRect;
+	}
+
+
+
+
 	/**
 	 * Create a new rectangle with a blue background and stroke
 	 * @return
@@ -222,9 +291,9 @@ public class MainController implements Initializable{
 	/**
 	 * Write the coordinates of a rectangle in a label
 	 */
-	private void writeCoordinates(){
+	private Rectangle writeCoordinates(){
 		String content = "";
-		
+
 		Point2D initialPoint = getPointInImage(rectinitX.get(), rectinitY.get());
 		Point2D finalPoint = getPointInImage(rectX.get(), rectY.get());
 
@@ -233,7 +302,14 @@ public class MainController implements Initializable{
 		content += "\nInitial Y = " + initialPoint.getY();
 		content += "\nFInal X = " + finalPoint.getX() ;
 		content += "\nFInal Y = " + finalPoint.getY();
+		
+		Rectangle rectangle = new Rectangle(
+				initialPoint.getX(),
+				initialPoint.getY(),
+				(finalPoint.getX() - initialPoint.getX()),
+				(finalPoint.getY() - initialPoint.getY()));
 		coordinatesLabel.setText(content);
+		return rectangle;
 	}
 
 
